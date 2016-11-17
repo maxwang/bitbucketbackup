@@ -20,9 +20,9 @@ function BackupRepository(bbRepository) {
     
     var cloneUrl = bbRepository.links.clone[0].href,
         atPosition = cloneUrl.indexOf("@"),
-        rightNow = new Date(),
-        res = rightNow.toISOString().slice(0,10).replace(/-/g,""),
-        res2 = moment().format('YYYYMMDD'),
+        // rightNow = new Date(),
+        // res2 = rightNow.toISOString().slice(0,10).replace(/-/g,""),
+        res = moment().format('YYYYMMDD'),
         archive = archiver('zip'),
         bbfolder= bbRepository.full_name.replace("/", "_"),
         command ="git clone " + cloneUrl.substr(0, atPosition) + ":"  + password + cloneUrl.substr(atPosition) + " " + backupFolder + res + "\\" +bbfolder;
