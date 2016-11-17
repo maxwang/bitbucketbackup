@@ -1,6 +1,6 @@
-var username = 'username@bitbucket.com  ',
-    password = 'password',
-    bbusername = 'bbusername',
+var username = 'mwang@1080agile.com',
+    password = 'sms20151120',
+    bbusername = 'mwang2015',
     baseUrl = 'https://api.bitbucket.org/2.0/repositories/',
     backupFolder = 'C:\\temp\\backup\\';
 
@@ -17,12 +17,15 @@ var options_auth = { user: username, password: password };
 var client = new Client(options_auth);
 
 function BackupRepository(bbRepository) {
+    
     var cloneUrl = bbRepository.links.clone[0].href,
         atPosition = cloneUrl.indexOf("@"),
         rightNow = new Date(),
         res = rightNow.toISOString().slice(0,10).replace(/-/g,""),
-        archive = archiver('zip');
-        command ="git clone " + cloneUrl.substr(0, atPosition) + ":"  + password + cloneUrl.substr(atPosition) + " " + backupFolder + res + "\\" + bbRepository.name;
+        res2 = moment().format('YYYYMMDD'),
+        archive = archiver('zip'),
+        bbfolder= bbRepository.full_name.replace("/", "_"),
+        command ="git clone " + cloneUrl.substr(0, atPosition) + ":"  + password + cloneUrl.substr(atPosition) + " " + backupFolder + res + "\\" +bbfolder;
     
     exec(command, (error, stdout, stderr) => {
         
@@ -34,7 +37,7 @@ function BackupRepository(bbRepository) {
         console.log(`stdout: ${stdout}`);
         console.log(`stderr: ${stderr}`);
 
-        var zipFileName = backupFolder + res + "\\" + bbRepository.name + ".zip",
+        var zipFileName = backupFolder + res + "\\" + bbfolder + ".zip",
             zipFile = fsSimple.createWriteStream(zipFileName);
         
         console.log('zip to:' + zipFileName);
@@ -42,7 +45,7 @@ function BackupRepository(bbRepository) {
         zipFile.on('close', function() {
             console.log(archive.pointer() + ' total bytes');
             console.log('archiver has been finalized and the output file descriptor has closed.');
-            fs.removeSync(backupFolder + res + "\\" + bbRepository.name);
+            fs.removeSync(backupFolder + res + "\\" + bbfolder);
         });
 
         archive.on('error', function(err) {
@@ -52,7 +55,7 @@ function BackupRepository(bbRepository) {
         archive.pipe(zipFile);
 
         archive.bulk([
-        { expand: true, cwd: backupFolder + res + '\\'+bbRepository.name, src: ['**'] }
+        { expand: true, cwd: backupFolder + res + '\\'+bbfolder, src: ['**'] }
         ]);
 
         archive.finalize();
