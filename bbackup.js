@@ -1,6 +1,6 @@
-var username = 'mwang@1080agile.com',
-    password = 'sms20151120',
-    bbusername = 'mwang2015',
+var username = 'username@email.com',
+    password = 'password',
+    bbusername = 'bbusername',
     baseUrl = 'https://api.bitbucket.org/2.0/repositories/',
     backupFolder = 'C:\\temp\\backup\\';
 
